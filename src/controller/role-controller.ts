@@ -12,4 +12,15 @@ export class RoleController{
             next(error)
         }
     }
+
+    static async getAll(req: Request, res: Response, next: NextFunction){
+        try {
+            const result = await RoleService.getAll()
+            return res.status(200).json({
+                data: result
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
 }
