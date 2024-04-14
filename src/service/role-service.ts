@@ -13,4 +13,8 @@ export class RoleService{
             }
         })
     }
+
+    static async getAll(){
+        return await prisma.role.findMany()
+    }
 }
