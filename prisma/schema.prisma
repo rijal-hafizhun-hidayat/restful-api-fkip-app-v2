@@ -18,16 +18,26 @@ model user {
   name String @db.VarChar(255)
   username  String @unique
   role_id Int
-  plp_type String @db.VarChar(255)
+  plp_id Int?
   email String @unique
   password String @db.VarChar(255)
-  remember_token String? @db.VarChar(255)
+  token String? @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
   role role @relation(fields: [role_id], references: [id], map: "role_id_fkey")
+  plp plp? @relation(fields: [plp_id], references: [id], map: "plp_id_fkey")
 }
 
 model role {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user user[]
+}
+
+model plp {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   created_at DateTime @default(now())

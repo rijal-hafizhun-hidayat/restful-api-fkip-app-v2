@@ -47,4 +47,16 @@ export class RoleController{
             next(error)
         }
     }
+
+    static async updateById(req: Request, res: Response, next: NextFunction){
+        try {
+            const roleId: number = parseInt(req.params.roleId)
+            const result = await RoleService.updateById(req.body, roleId)
+            return res.status(200).json({
+                data: result
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
 }
