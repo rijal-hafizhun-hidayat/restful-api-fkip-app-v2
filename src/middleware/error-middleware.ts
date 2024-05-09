@@ -5,7 +5,7 @@ import { ErrorResponse } from "../error/error-response";
 export const errorMiddleware = async (error: Error, req: Request, res: Response, next: NextFunction) => {
     if(error instanceof ZodError){
         res.status(400).json({
-            errors: error
+            errors: error.format()
         })
     }
     else if(error instanceof ErrorResponse){
