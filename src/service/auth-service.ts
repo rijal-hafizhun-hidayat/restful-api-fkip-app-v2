@@ -1,9 +1,9 @@
 import { prisma } from "../app/database";
 import { ErrorResponse } from "../error/error-response";
-import { LoginRequest, LoginResponse, toLoginResponse } from "../model/auth-model";
+import { LoginRequest, LoginResponse, TokenRequest, toLoginResponse } from "../model/auth-model";
 import { AuthValidation } from "../validation/auth-validation";
 import { Validation } from "../validation/validation";
-import Jwt from "jsonwebtoken";
+import Jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 export class AuthService{
@@ -40,5 +40,23 @@ export class AuthService{
         })
 
         return toLoginResponse(updateUserToken)
+    }
+
+    static async currentUser(request: string){
+        const requestToken = Validation.validate(AuthValidation.TokenRequest, request)
+
+        const userId = Jwt.verify(requestToken, 'swefijlzc22@#()33vsd') as JwtPayload
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId.id
+            }
+        })
+
+        if(!user){
+            throw new ErrorResponse(404, 'user not found')
+        }
+
+        return toLoginResponse(user)
     }
 }

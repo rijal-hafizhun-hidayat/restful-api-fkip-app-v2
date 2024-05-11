@@ -5,4 +5,6 @@ export class AuthValidation{
         username: string().min(1).max(100),
         password: string().min(1).max(100)
     })
+
+    static readonly TokenRequest: ZodType = z.string().min(1)
 }

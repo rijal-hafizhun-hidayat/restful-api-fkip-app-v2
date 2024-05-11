@@ -12,4 +12,16 @@ export class AuthController{
             next(error)
         }
     }
+
+    static async currentUser(req: Request, res: Response, next: NextFunction){
+        try {
+            const token: string = req.header('Authorization') as string
+            const user = await AuthService.currentUser(token)
+            return res.status(200).json({
+                data: user
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
 }

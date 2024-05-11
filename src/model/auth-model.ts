@@ -5,6 +5,10 @@ export type LoginRequest = {
     password: string
 }
 
+export type TokenRequest = {
+    token: string
+}
+
 export type LoginResponse = {
     plp_id?: number | null,
     role_id: number,
