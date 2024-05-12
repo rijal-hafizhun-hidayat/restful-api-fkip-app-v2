@@ -1,9 +1,9 @@
 import { prisma } from "../app/database";
 import { ErrorResponse } from "../error/error-response";
-import { LoginRequest, LoginResponse, toLoginResponse } from "../model/auth-model";
+import { LoginRequest, LoginResponse, TokenRequest, toLoginResponse } from "../model/auth-model";
 import { AuthValidation } from "../validation/auth-validation";
 import { Validation } from "../validation/validation";
-import Jwt from "jsonwebtoken";
+import Jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 export class AuthService{
@@ -28,7 +28,7 @@ export class AuthService{
 
         const token = Jwt.sign({
             id: user.id
-        }, "swefijlzc22@#()33vsd", { expiresIn: 60 * 60 })
+        }, "swefijlzc22@#()33vsd", { expiresIn: 7200 })
 
         const updateUserToken = await prisma.user.update({
             where: {
@@ -40,5 +40,24 @@ export class AuthService{
         })
 
         return toLoginResponse(updateUserToken)
+    }
+
+    static async currentUser(request: string){
+        const token = request.split(' ')
+        const requestToken = Validation.validate(AuthValidation.TokenRequest, token[1])
+
+        const userId = Jwt.verify(requestToken, 'swefijlzc22@#()33vsd') as JwtPayload
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId.id
+            }
+        })
+
+        if(!user){
+            throw new ErrorResponse(404, 'user not found')
+        }
+
+        return toLoginResponse(user)
     }
 }

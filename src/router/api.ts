@@ -2,9 +2,12 @@ import express from "express";
 import { authMiddleware } from "../middleware/auth-middleware";
 import { RoleController } from "../controller/role-controller";
 import { PlpController } from "../controller/plp-controller";
+import { AuthController } from "../controller/auth-controller";
 
 const apiRoute = express.Router()
 apiRoute.use(authMiddleware)
+
+apiRoute.get('/api/current-user', AuthController.currentUser)
 
 apiRoute.get('/api/role', RoleController.getAll)
 apiRoute.post('/api/role', RoleController.store)
