@@ -28,7 +28,7 @@ export class AuthService{
 
         const token = Jwt.sign({
             id: user.id
-        }, "swefijlzc22@#()33vsd", { expiresIn: 60 * 60 })
+        }, "swefijlzc22@#()33vsd", { expiresIn: 7200 })
 
         const updateUserToken = await prisma.user.update({
             where: {
@@ -43,7 +43,8 @@ export class AuthService{
     }
 
     static async currentUser(request: string){
-        const requestToken = Validation.validate(AuthValidation.TokenRequest, request)
+        const token = request.split(' ')
+        const requestToken = Validation.validate(AuthValidation.TokenRequest, token[1])
 
         const userId = Jwt.verify(requestToken, 'swefijlzc22@#()33vsd') as JwtPayload
 

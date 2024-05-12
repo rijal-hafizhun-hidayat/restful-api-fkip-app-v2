@@ -13,6 +13,7 @@ export type LoginResponse = {
     plp_id?: number | null,
     role_id: number,
     name: string,
+    email: string,
     token?: string | null
 }
 
@@ -21,6 +22,7 @@ export function toLoginResponse(user: user): LoginResponse{
         plp_id: user.plp_id,
         role_id: user.role_id,
         name: user.name,
+        email: user.email,
         token: user.token
     }
 }

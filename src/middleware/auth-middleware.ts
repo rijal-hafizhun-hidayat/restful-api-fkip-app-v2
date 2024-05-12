@@ -12,7 +12,9 @@ export const authMiddleware = async(req: UserInterface, res: Response, next: Nex
         }).end()
     }
 
-    Jwt.verify(token, 'swefijlzc22@#()33vsd', async function(err, decoded) {
+    const tokenSplit = token.split(' ')
+
+    Jwt.verify(tokenSplit[1], 'swefijlzc22@#()33vsd', async function(err, decoded) {
         if(err){
             res.status(401).json({
                 errorToken: err.name,
@@ -22,7 +24,7 @@ export const authMiddleware = async(req: UserInterface, res: Response, next: Nex
         else{
             const user = await prisma.user.findFirst({
                 where: {
-                    token: token
+                    token: tokenSplit[1]
                 }
             })
     
