@@ -3,6 +3,7 @@ import { authMiddleware } from "../middleware/auth-middleware";
 import { RoleController } from "../controller/role-controller";
 import { PlpController } from "../controller/plp-controller";
 import { AuthController } from "../controller/auth-controller";
+import { SchoolController } from "../controller/school-controller";
 
 const apiRoute = express.Router()
 apiRoute.use(authMiddleware)
@@ -19,6 +20,11 @@ apiRoute.get('/api/plp', PlpController.getAll)
 apiRoute.post('/api/plp', PlpController.store)
 apiRoute.get('/api/plp/:plpId', PlpController.findById)
 apiRoute.delete('/api/plp/:plpId', PlpController.destroyById)
+
+apiRoute.post('/api/school', SchoolController.store)
+apiRoute.get('/api/school/:schoolId', SchoolController.findById)
+apiRoute.delete('/api/school/:schoolId', SchoolController.destroyById)
+apiRoute.put('/api/school/:schoolId', SchoolController.updateById)
 
 export {
     apiRoute
