@@ -8,4 +8,8 @@ export class UserValidation{
         email: string().min(1).max(100),
         password: string().min(1).max(100)
     })
+
+    static readonly passwordRequest: ZodType = z.object({
+        password: string().min(1).max(100)
+    })
 }
