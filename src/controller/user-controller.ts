@@ -12,4 +12,16 @@ export class UserController{
             next(error)
         }
     }
+
+    static async getAll(req: Request, res: Response, next: NextFunction){
+        try {
+            const page: number = parseInt(req.query.page as string)
+            const result = await UserService.getAllData(page)
+            return res.status(200).json({
+                data: result
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
 }

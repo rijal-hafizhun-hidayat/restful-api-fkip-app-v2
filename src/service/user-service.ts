@@ -19,4 +19,30 @@ export class UserService{
 
         return toRegisterResponse(user)
     }
+
+    static async getAllData(page: number){
+        const perPage: number = 5
+        const offset: number = (page - 1) * perPage;
+
+        const user = await prisma.user.findMany({
+            take: perPage,
+            skip: offset,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
+            },
+            orderBy: {
+                id: 'desc'
+            }
+        })
+        
+        return user
+    }
 }
