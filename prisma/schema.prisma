@@ -42,5 +42,17 @@ model plp {
   name String @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  
   user user[]
+  school school[]
+}
+
+model school {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  plp_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  plp plp @relation(fields: [plp_id], references: [id], map: "school_plp_id_fkey")
 }
