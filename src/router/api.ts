@@ -4,6 +4,7 @@ import { RoleController } from "../controller/role-controller";
 import { PlpController } from "../controller/plp-controller";
 import { AuthController } from "../controller/auth-controller";
 import { SchoolController } from "../controller/school-controller";
+import { UserController } from "../controller/user-controller";
 
 const apiRoute = express.Router()
 apiRoute.use(authMiddleware)
@@ -25,6 +26,8 @@ apiRoute.post('/api/school', SchoolController.store)
 apiRoute.get('/api/school/:schoolId', SchoolController.findById)
 apiRoute.delete('/api/school/:schoolId', SchoolController.destroyById)
 apiRoute.put('/api/school/:schoolId', SchoolController.updateById)
+
+apiRoute.get('/api/users', UserController.getAll)
 
 export {
     apiRoute
