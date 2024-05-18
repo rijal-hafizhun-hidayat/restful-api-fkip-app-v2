@@ -1,10 +1,11 @@
 import express from "express";
-import { RoleController } from "../controller/role-controller";
+import { UserController } from "../controller/user-controller";
+import { AuthController } from "../controller/auth-controller";
 
 const publicRoute = express.Router()
 
-publicRoute.get('/api/role', RoleController.getAll)
-publicRoute.post('/api/role', RoleController.store)
+publicRoute.post('/api/login', AuthController.login)
+publicRoute.post('/api/register', UserController.register)
 
 export {
     publicRoute
