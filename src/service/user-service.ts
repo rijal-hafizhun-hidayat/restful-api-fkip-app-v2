@@ -1,8 +1,9 @@
 import { prisma } from "../app/database";
-import { RegisterRequest, RegisterResponse, toRegisterResponse } from "../model/user-model";
+import { PasswordRequest, RegisterRequest, RegisterResponse, toRegisterResponse, toUserResponse, UserResponse } from "../model/user-model";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 import bcrypt from "bcrypt"
+import { ErrorResponse } from "../error/error-response";
 
 export class UserService{
     static async register(request: RegisterRequest): Promise<RegisterResponse>{
@@ -18,6 +19,41 @@ export class UserService{
         })
 
         return toRegisterResponse(user)
+    }
+
+    static async findDataById(userId: number): Promise<UserResponse>{
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
+
+        if(!user){
+            throw new ErrorResponse(404, 'user not found')
+        }
+
+        return toUserResponse(user)
+    }
+
+    static async updateDataPasswordById(request: PasswordRequest, userId: number): Promise<UserResponse>{
+        const passwordRequest = Validation.validate(UserValidation.passwordRequest, request)
+
+        const isUserExist = this.findDataById(userId)
+
+        if(!isUserExist){
+            throw new ErrorResponse(404, 'user not found')
+        }
+
+        const user = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                password: bcrypt.hashSync(passwordRequest.password, 10)
+            }
+        })
+
+        return toUserResponse(user)
     }
 
     static async getAllData(page: number){
