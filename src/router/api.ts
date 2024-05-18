@@ -28,6 +28,8 @@ apiRoute.delete('/api/school/:schoolId', SchoolController.destroyById)
 apiRoute.put('/api/school/:schoolId', SchoolController.updateById)
 
 apiRoute.get('/api/users', UserController.getAll)
+apiRoute.get('/api/users/:userId', UserController.findById)
+apiRoute.put('/api/users/:userId/change-password', UserController.updatePasswordById)
 
 export {
     apiRoute
