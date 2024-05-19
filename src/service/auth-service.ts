@@ -60,4 +60,21 @@ export class AuthService{
 
         return toLoginResponse(user)
     }
+
+    static async logoutUser(token: string){
+        const tokenSplit = token.split(' ')
+        
+        const verifToken = Jwt.verify(tokenSplit[1], 'swefijlzc22@#()33vsd') as JwtPayload
+        
+        const user = await prisma.user.update({
+            where: {
+                id: verifToken.id
+            },
+            data: {
+                token: null
+            }
+        })
+
+        return toLoginResponse(user)
+    }
 }
