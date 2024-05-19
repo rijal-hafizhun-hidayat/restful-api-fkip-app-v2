@@ -56,7 +56,31 @@ export class UserService{
         return toUserResponse(user)
     }
 
-    static async getAllData(page: number){
+    static async updateDataById(request: UserResponse, userId: number): Promise<UserResponse>{
+        const userRequest = Validation.validate(UserValidation.updateRequest, request)
+        const isUserExist = this.findDataById(userId)
+
+        if(!isUserExist){
+            throw new ErrorResponse(404, 'user not found')
+        }
+
+        const user = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                name: userRequest.name,
+                username: userRequest.username,
+                role_id: userRequest.role_id,
+                email: userRequest.email
+            }
+        })
+
+        return toUserResponse(user)
+    }
+
+    static async getAllData(page: number, search: string){
+        const searchQuery: string = search
         const perPage: number = 5
         const offset: number = (page - 1) * perPage;
 
@@ -76,6 +100,20 @@ export class UserService{
             },
             orderBy: {
                 id: 'desc'
+            },
+            where: {
+                OR: [
+                    {
+                        name: {
+                            contains: searchQuery,
+                        },
+                    },
+                    {
+                        email: {
+                            contains: searchQuery,
+                        },
+                    },
+                ]
             }
         })
         
