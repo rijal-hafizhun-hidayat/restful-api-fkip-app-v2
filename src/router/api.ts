@@ -21,6 +21,7 @@ apiRoute.get('/api/plp', PlpController.getAll)
 apiRoute.post('/api/plp', PlpController.store)
 apiRoute.get('/api/plp/:plpId', PlpController.findById)
 apiRoute.delete('/api/plp/:plpId', PlpController.destroyById)
+apiRoute.put('/api/plp/:plpId', PlpController.updateById)
 
 apiRoute.post('/api/school', SchoolController.store)
 apiRoute.get('/api/school/:schoolId', SchoolController.findById)
