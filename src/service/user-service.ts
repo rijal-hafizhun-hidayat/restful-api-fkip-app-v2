@@ -79,7 +79,8 @@ export class UserService{
         return toUserResponse(user)
     }
 
-    static async getAllData(page: number){
+    static async getAllData(page: number, search: string){
+        const searchQuery: string = search
         const perPage: number = 5
         const offset: number = (page - 1) * perPage;
 
@@ -99,6 +100,20 @@ export class UserService{
             },
             orderBy: {
                 id: 'desc'
+            },
+            where: {
+                OR: [
+                    {
+                        name: {
+                            contains: searchQuery,
+                        },
+                    },
+                    {
+                        email: {
+                            contains: searchQuery,
+                        },
+                    },
+                ]
             }
         })
         
