@@ -17,7 +17,9 @@ export class UserController{
     static async getAll(req: Request, res: Response, next: NextFunction){
         try {
             const page: number = parseInt(req.query.page as string)
-            const result = await UserService.getAllData(page)
+            const search: string = req.query.search as string
+            
+            const result = await UserService.getAllData(page, search)
             return res.status(200).json({
                 data: result
             })
