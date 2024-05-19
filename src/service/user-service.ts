@@ -38,7 +38,7 @@ export class UserService{
     static async updateDataPasswordById(request: PasswordRequest, userId: number): Promise<UserResponse>{
         const passwordRequest = Validation.validate(UserValidation.passwordRequest, request)
 
-        const isUserExist = this.findDataById(userId)
+        const isUserExist = await this.findDataById(userId)
 
         if(!isUserExist){
             throw new ErrorResponse(404, 'user not found')
@@ -58,7 +58,7 @@ export class UserService{
 
     static async updateDataById(request: UserResponse, userId: number): Promise<UserResponse>{
         const userRequest = Validation.validate(UserValidation.updateRequest, request)
-        const isUserExist = this.findDataById(userId)
+        const isUserExist = await this.findDataById(userId)
 
         if(!isUserExist){
             throw new ErrorResponse(404, 'user not found')

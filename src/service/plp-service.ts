@@ -35,11 +35,7 @@ export class PlpService{
     }
 
     static async destroyById(plpId: number): Promise<PlpResponse>{
-        const isPlpExists = await prisma.plp.findUnique({
-            where: {
-                id: plpId
-            }
-        })
+        const isPlpExists = await this.findById(plpId)
 
         if(isPlpExists === null){
             throw new ErrorResponse(404, 'Plp not found')
@@ -48,6 +44,27 @@ export class PlpService{
         const plp = await prisma.plp.delete({
             where: {
                 id: plpId
+            }
+        })
+
+        return toPlpResponse(plp)
+    }
+
+    static async updateDataById(request: PlpRequest, plpId: number): Promise<PlpResponse>{
+        const plpRequest: PlpRequest = Validation.validate(PlpValidation.PlpRequest, request)
+
+        const isPlpExists = await this.findById(plpId)
+
+        if(!isPlpExists){
+            throw new ErrorResponse(404, 'plp not found')
+        }
+
+        const plp = await prisma.plp.update({
+            where: {
+                id: plpId
+            },
+            data: {
+                name: plpRequest.name
             }
         })
 
