@@ -41,11 +41,14 @@ model role {
 model plp {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
+  school_year_id Int?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   
   user user[]
   school school[]
+
+  school_year school_year? @relation(fields: [school_year_id], references: [id], map: "plp_school_year_id")
 }
 
 model school {
@@ -56,4 +59,13 @@ model school {
   updated_at DateTime @updatedAt
 
   plp plp @relation(fields: [plp_id], references: [id], map: "school_plp_id_fkey")
+}
+
+model school_year {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  plp plp[]
 }
