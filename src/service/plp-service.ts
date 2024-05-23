@@ -13,7 +13,8 @@ export class PlpService{
         const plpRequest = Validation.validate(PlpValidation.PlpRequest, request)
         const plp = await prisma.plp.create({
             data: {
-                name: plpRequest.name
+                name: plpRequest.name,
+                school_year_id: plpRequest.school_year_id
             }
         })
 
@@ -64,7 +65,8 @@ export class PlpService{
                 id: plpId
             },
             data: {
-                name: plpRequest.name
+                name: plpRequest.name,
+                school_year_id: plpRequest.school_year_id
             }
         })
 
