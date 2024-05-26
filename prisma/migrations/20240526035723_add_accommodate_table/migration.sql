@@ -1,0 +1,24 @@
+-- CreateTable
+CREATE TABLE `accommodate` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `colleger_id` INTEGER NULL,
+    `tutor_teacher_id` INTEGER NULL,
+    `dpl_id` INTEGER NULL,
+    `plp_id` INTEGER NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `accommodate` ADD CONSTRAINT `accommodate_colleger_id_fkey` FOREIGN KEY (`colleger_id`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `accommodate` ADD CONSTRAINT `accomodate_tutor_teacher_id_fkey` FOREIGN KEY (`tutor_teacher_id`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `accommodate` ADD CONSTRAINT `accommodate_dpl_id_fkey` FOREIGN KEY (`dpl_id`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `accommodate` ADD CONSTRAINT `accommodate_plp_id_fkey` FOREIGN KEY (`plp_id`) REFERENCES `plp`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
