@@ -77,4 +77,19 @@ export class AuthService{
 
         return toLoginResponse(user)
     }
+
+    static async refreshToken(token: string){
+        const tokenSplit = token.split(' ')
+        
+        const verifToken = Jwt.verify(tokenSplit[1], 'swefijlzc22@#()33vsd') as JwtPayload
+
+        if(!verifToken.data){
+            const token = Jwt.sign({
+                id: verifToken.data.id
+            }, "swefijlzc22@#()33vsd", { expiresIn: 7200 })
+        }
+        else{
+            const token = tokenSplit[1]
+        }
+    }
 }

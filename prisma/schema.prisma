@@ -19,7 +19,6 @@ model user {
   name String @db.VarChar(255)
   username  String @unique
   role_id Int
-  plp_id Int?
   email String @unique
   password String @db.VarChar(255)
   token String? @db.VarChar(255)
@@ -27,7 +26,6 @@ model user {
   updated_at DateTime @updatedAt
 
   role role @relation(fields: [role_id], references: [id], map: "role_id_fkey")
-  plp plp? @relation(fields: [plp_id], references: [id], map: "plp_id_fkey")
 }
 
 model role {
@@ -45,7 +43,6 @@ model plp {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   
-  user user[]
   school school[]
 
   school_year school_year? @relation(fields: [school_year_id], references: [id], map: "plp_school_year_id")
