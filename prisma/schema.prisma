@@ -25,10 +25,6 @@ model user {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  colleger accommodate[] @relation("accommodate_colleger_id")
-  tutor_teacher accommodate[] @relation("accommodate_tutor_teacher")
-  dpl accommodate[] @relation("accommodate_dpl")
-
   role role @relation(fields: [role_id], references: [id], map: "role_id_fkey")
 }
 
@@ -47,7 +43,6 @@ model plp {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   
-  accomodate accommodate[]
   school school[]
 
   school_year school_year? @relation(fields: [school_year_id], references: [id], map: "plp_school_year_id")
@@ -70,19 +65,4 @@ model school_year {
   updated_at DateTime @updatedAt
 
   plp plp[]
-}
-
-model accommodate {
-  id Int @id @default(autoincrement())
-  colleger_id Int?
-  tutor_teacher_id Int?
-  dpl_id Int?
-  plp_id Int?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  colleger user? @relation("accommodate_colleger_id", fields: [colleger_id], references: [id], map: "accommodate_colleger_id_fkey")
-  tutor_teacher user? @relation("accommodate_tutor_teacher", fields: [tutor_teacher_id], references: [id], map: "accomodate_tutor_teacher_id_fkey")
-  dpl user? @relation("accommodate_dpl", fields: [dpl_id], references: [id], map: "accommodate_dpl_id_fkey")
-  plp plp? @relation(fields: [plp_id], references: [id], map: "accommodate_plp_id_fkey")
 }

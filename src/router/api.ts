@@ -10,7 +10,8 @@ import { SchoolYearController } from "../controller/school-year-controller";
 const apiRoute = express.Router()
 apiRoute.use(authMiddleware)
 
-apiRoute.get('/api/current-user', AuthController.currentUser)
+apiRoute.get('/api/me', AuthController.currentUser)
+apiRoute.get('/api/refreshtoken', AuthController.refreshToken)
 apiRoute.put('/api/logout', AuthController.logout)
 
 apiRoute.get('/api/role', RoleController.getAll)
