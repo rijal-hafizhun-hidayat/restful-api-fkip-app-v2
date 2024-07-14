@@ -18,14 +18,13 @@ model user {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   username  String @unique
-  role_id Int
   email String @unique
   password String @db.VarChar(255)
   token String? @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  role role @relation(fields: [role_id], references: [id], map: "role_id_fkey")
+  user_roles user_roles[]
 }
 
 model role {
@@ -33,7 +32,8 @@ model role {
   name String @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user user[]
+
+  user_roles user_roles[]
 }
 
 model plp {
@@ -65,4 +65,15 @@ model school_year {
   updated_at DateTime @updatedAt
 
   plp plp[]
+}
+
+model user_roles {
+  id Int @id @default(autoincrement())
+  user_id Int
+  role_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  role role @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user user @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
