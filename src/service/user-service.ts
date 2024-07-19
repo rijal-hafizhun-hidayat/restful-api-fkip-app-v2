@@ -12,7 +12,6 @@ export class UserService{
             data: {
                 name: registerRequest.name,
                 username: registerRequest.username,
-                role_id: registerRequest.role_id,
                 email: registerRequest.email,
                 password: bcrypt.hashSync(registerRequest.password, 10)
             }
@@ -71,7 +70,6 @@ export class UserService{
             data: {
                 name: userRequest.name,
                 username: userRequest.username,
-                role_id: userRequest.role_id,
                 email: userRequest.email
             }
         })
@@ -90,13 +88,7 @@ export class UserService{
             select: {
                 id: true,
                 name: true,
-                email: true,
-                role: {
-                    select: {
-                        id: true,
-                        name: true
-                    }
-                }
+                email: true
             },
             orderBy: {
                 id: 'desc'
