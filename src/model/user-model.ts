@@ -11,7 +11,6 @@ export type RegisterRequest = {
 export type UserResponse = {
     name: string,
     username: string,
-    role_id: number,
     email: string
 }
 
@@ -33,7 +32,6 @@ export function toUserResponse(user: user): UserResponse{
     return {
         name: user.name,
         username: user.username,
-        role_id: user.role_id,
         email: user.email
     }
 }
