@@ -14,9 +14,9 @@ export type LoginResponse = {
     token?: string | null
 }
 
-export function toLoginResponse(user: user): LoginResponse{
+export function toLoginResponse(user: user, token: string): LoginResponse{
     return {
         name: user.name,
-        token: user.token
+        token: token
     }
 }

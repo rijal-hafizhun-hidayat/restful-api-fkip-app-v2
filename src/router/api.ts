@@ -12,7 +12,6 @@ apiRoute.use(authMiddleware)
 
 apiRoute.get('/api/me', AuthController.currentUser)
 apiRoute.get('/api/refreshtoken', AuthController.refreshToken)
-apiRoute.put('/api/logout', AuthController.logout)
 
 apiRoute.get('/api/role', RoleController.getAll)
 apiRoute.post('/api/role', RoleController.store)

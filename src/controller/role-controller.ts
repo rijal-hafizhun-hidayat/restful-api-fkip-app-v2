@@ -15,7 +15,20 @@ export class RoleController{
 
     static async getAll(req: Request, res: Response, next: NextFunction){
         try {
-            const result = await RoleService.getAll()
+            const search: string = req.query.search as string
+            const result = await RoleService.getAll(search)
+            return res.status(200).json({
+                data: result
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async getAllNotAdmin(req: Request, res: Response, next: NextFunction){
+        try {
+            const result = await RoleService.getAllNotAdmin()
+
             return res.status(200).json({
                 data: result
             })

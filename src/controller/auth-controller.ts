@@ -25,26 +25,6 @@ export class AuthController{
         }
     }
 
-    static async logout(req: Request, res: Response, next: NextFunction){
-        try {
-            const token: string = req.get('Authorization')!
-
-            if(!token){
-                return res.status(401).json({
-                    data: 'unauthorized'
-                }).end()
-            }
-
-            const result = await AuthService.logoutUser(token)
-
-            return res.status(200).json({
-                data: result
-            })
-        } catch (error) {
-            next(error)
-        }
-    }
-
     static async refreshToken(req: Request, res: Response, next: NextFunction){
         try {
             const token: string = req.get('Authorization')!

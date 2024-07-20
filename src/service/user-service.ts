@@ -1,23 +1,34 @@
 import { prisma } from "../app/database";
-import { PasswordRequest, RegisterRequest, RegisterResponse, toRegisterResponse, toUserResponse, UserResponse } from "../model/user-model";
+import { PasswordRequest, RegisterRequest, RegisterResponse, toUserResponse, UserResponse } from "../model/user-model";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 import bcrypt from "bcrypt"
 import { ErrorResponse } from "../error/error-response";
 
 export class UserService{
-    static async register(request: RegisterRequest): Promise<RegisterResponse>{
+    static async register(request: RegisterRequest){
         const registerRequest = Validation.validate(UserValidation.registerRequest, request)
-        const user = await prisma.user.create({
-            data: {
-                name: registerRequest.name,
-                username: registerRequest.username,
-                email: registerRequest.email,
-                password: bcrypt.hashSync(registerRequest.password, 10)
-            }
-        })
+        const [user] = await prisma.$transaction([
+            prisma.user.create({
+                data: {
+                    name: registerRequest.name,
+                    username: registerRequest.username,
+                    email: registerRequest.email,
+                    password: bcrypt.hashSync(registerRequest.password, 10)
+                }
+            })
+        ])
 
-        return toRegisterResponse(user)
+        await prisma.$transaction([
+            prisma.user_roles.create({
+                data: {
+                    user_id: user.id,
+                    role_id: registerRequest.role_id
+                }
+            })
+        ])
+
+        return user
     }
 
     static async findDataById(userId: number): Promise<UserResponse>{
