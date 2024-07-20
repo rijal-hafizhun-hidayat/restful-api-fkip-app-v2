@@ -22,12 +22,6 @@ export type RegisterResponse = {
     token: string
 }
 
-export function toRegisterResponse(user: user): RegisterResponse{
-    return {
-        token: user.token!
-    }
-}
-
 export function toUserResponse(user: user): UserResponse{
     return {
         name: user.name,
