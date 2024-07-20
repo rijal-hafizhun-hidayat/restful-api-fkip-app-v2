@@ -17,8 +17,28 @@ export class RoleService{
         return toRoleResponse(role)
     }
 
-    static async getAll(){
-        return await prisma.role.findMany()
+    static async getAll(search: string): Promise<any>{
+        const searchQuery: string = search
+
+        const roles = await prisma.role.findMany({
+            where: {
+                name: {
+                    contains: searchQuery
+                }
+            }
+        })
+
+        return roles
+    }
+
+    static async getAllNotAdmin(): Promise<any>{
+        const roles = await prisma.role.findMany({
+            where: {
+                guard: false
+            }
+        })
+
+        return roles
     }
 
     static async destroyById(roleId: number): Promise<RoleResponse>{
