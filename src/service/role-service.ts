@@ -5,12 +5,12 @@ import { RoleValidation } from "../validation/role-validation";
 import { Validation } from "../validation/validation";
 
 export class RoleService{
-    static async store(request: RoleRequest): Promise<RoleResponse>{
+    static async store(request: RoleRequest){
         const roleRequest = Validation.validate(RoleValidation.RoleRequest, request)
-
         const role = await prisma.role.create({
             data: {
-                name: roleRequest.name
+                name: roleRequest.name,
+                guard: roleRequest.guard
             }
         })
 
@@ -91,7 +91,8 @@ export class RoleService{
                 id: roleId
             },
             data: {
-                name: roleRequest.name
+                name: roleRequest.name,
+                guard: roleRequest.guard
             }
         })
 
