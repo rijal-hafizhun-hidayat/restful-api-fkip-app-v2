@@ -11,12 +11,23 @@ export class PlpService{
 
     static async store(request: PlpRequest): Promise<PlpResponse>{
         const plpRequest = Validation.validate(PlpValidation.PlpRequest, request)
-        const plp = await prisma.plp.create({
-            data: {
-                name: plpRequest.name,
-                school_year_id: plpRequest.school_year_id
-            }
-        })
+        
+        const [plp] = await prisma.$transaction([
+            prisma.plp.create({
+                data: {
+                    name: plpRequest.name
+                }
+            }),
+        ])
+
+        await prisma.$transaction([
+            prisma.plp_school_year.create({
+                data: {
+                    plp_id: plp.id,
+                    school_year_id: plpRequest.school_year_id
+                }
+            })
+        ])
 
         return toPlpResponse(plp)
     }
@@ -41,12 +52,14 @@ export class PlpService{
         if(isPlpExists === null){
             throw new ErrorResponse(404, 'Plp not found')
         }
-        
-        const plp = await prisma.plp.delete({
-            where: {
-                id: plpId
-            }
-        })
+    
+        const [plp] = await prisma.$transaction([
+            prisma.plp.delete({
+                where: {
+                    id: plpId
+                }
+            })
+        ])
 
         return toPlpResponse(plp)
     }
@@ -60,15 +73,16 @@ export class PlpService{
             throw new ErrorResponse(404, 'plp not found')
         }
 
-        const plp = await prisma.plp.update({
-            where: {
-                id: plpId
-            },
-            data: {
-                name: plpRequest.name,
-                school_year_id: plpRequest.school_year_id
-            }
-        })
+        const [plp] = await prisma.$transaction([
+            prisma.plp.update({
+                where: {
+                    id: plpId
+                },
+                data: {
+                    name: plpRequest.name
+                }
+            })
+        ])
 
         return toPlpResponse(plp)
     }
