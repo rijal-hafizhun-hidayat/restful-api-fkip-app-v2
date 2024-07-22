@@ -1,12 +1,14 @@
 import { prisma } from "../app/database";
-import { PasswordRequest, RegisterRequest, RegisterResponse, toUserResponse, UserResponse } from "../model/user-model";
+import { PasswordRequest, RegisterRequest, toUserResponse, UserResponse } from "../model/user-model";
 import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 import bcrypt from "bcrypt"
+import Jwt from "jsonwebtoken";
 import { ErrorResponse } from "../error/error-response";
+import { LoginResponse, toLoginResponse } from "../model/auth-model";
 
 export class UserService{
-    static async register(request: RegisterRequest){
+    static async register(request: RegisterRequest): Promise<LoginResponse>{
         const registerRequest = Validation.validate(UserValidation.registerRequest, request)
         const [user] = await prisma.$transaction([
             prisma.user.create({
@@ -28,7 +30,11 @@ export class UserService{
             })
         ])
 
-        return user
+        const token = Jwt.sign({
+            id: user.id
+        }, "swefijlzc22@#()33vsd", { expiresIn: 7200 })
+
+        return toLoginResponse(user, token)
     }
 
     static async findDataById(userId: number): Promise<UserResponse>{

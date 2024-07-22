@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "relationJoins"]
 }
 
 datasource db {
@@ -29,7 +29,7 @@ model user {
 model role {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
-  guard Boolean? @db.TinyInt
+  guard Boolean? @db.TinyInt @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -39,13 +39,11 @@ model role {
 model plp {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
-  school_year_id Int?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   
   school school[]
-
-  school_year school_year? @relation(fields: [school_year_id], references: [id], map: "plp_school_year_id")
+  plp_school_year plp_school_year[]
 }
 
 model school {
@@ -64,7 +62,7 @@ model school_year {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  plp plp[]
+  plp_school_year plp_school_year[]
 }
 
 model user_roles {
@@ -76,4 +74,15 @@ model user_roles {
 
   role role @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user user @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model plp_school_year {
+  id Int @id @default(autoincrement())
+  plp_id Int
+  school_year_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  plp plp @relation(fields: [plp_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  school_year school_year @relation(fields: [school_year_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
