@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex", "relationJoins"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -23,7 +23,9 @@ model user {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user_roles user_roles[]
+  roles user_roles[]
+
+  @@map("users")
 }
 
 model role {
@@ -33,7 +35,9 @@ model role {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user_roles user_roles[]
+  users user_roles[]
+
+  @@map("roles")
 }
 
 model plp {
@@ -42,19 +46,12 @@ model plp {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   
-  school school[]
-  plp_school_year plp_school_year[]
+  school_years plp_school_year[]
+  schools school_plps[]
+
+  @@map("plps")
 }
 
-model school {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  plp_id Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  plp plp @relation(fields: [plp_id], references: [id], map: "school_plp_id_fkey")
-}
 
 model school_year {
   id Int @id @default(autoincrement())
@@ -62,22 +59,12 @@ model school_year {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  plp_school_year plp_school_year[]
-}
+  plps plp_school_year[]
 
-model user_roles {
-  id Int @id @default(autoincrement())
-  user_id Int
-  role_id Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  role role @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user user @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@map("school_years")
 }
 
 model plp_school_year {
-  id Int @id @default(autoincrement())
   plp_id Int
   school_year_id Int
   created_at DateTime @default(now())
@@ -85,4 +72,46 @@ model plp_school_year {
 
   plp plp @relation(fields: [plp_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   school_year school_year @relation(fields: [school_year_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([plp_id, school_year_id])
+
+  @@map("plp_school_years")
+}
+
+model user_roles {
+  user_id Int
+  role_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  role role @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user user @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([user_id, role_id])
+
+  @@map("user_roles")
+}
+
+model school {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  schools school_plps[]
+
+  @@map("schools")
+}
+
+model school_plps {
+  school_id Int
+  plp_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  school school @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  plp plp @relation(fields: [plp_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([school_id, plp_id])
+  @@map("school_plps")
 }
