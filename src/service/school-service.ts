@@ -1,72 +1,139 @@
 import { prisma } from "../app/database";
 import { ErrorResponse } from "../error/error-response";
-import { SchoolRequest, toSchoolResponse } from "../model/school-model";
+import {
+  SchoolRequest,
+  SchoolResponse,
+  toSchoolResponse,
+} from "../model/school-model";
 import { SchoolValidation } from "../validation/school-validation";
 import { Validation } from "../validation/validation";
 
-export class SchoolService{
-    static async storeData(request: SchoolRequest){
-        const schoolRequest = Validation.validate(SchoolValidation.SchoolRequest, request)
-        
-        const school = await prisma.school.create({
-            data: {
-                name: schoolRequest.name,
-                plp_id: schoolRequest.plp_id
-            }
-        })
-
-        return toSchoolResponse(school)
-    }
-
-    static async findDataById(schoolId: number){
-        const school = await prisma.school.findUnique({
-            where: {
-                id: schoolId
-            }
-        })
-
-        if(!school){
-            throw new ErrorResponse(404, 'school not found')
+export class SchoolService {
+  static async getAll(searchQuery: string): Promise<any> {
+    const schools = await prisma.school.findMany({
+      where: {
+        name: {
+          contains: searchQuery,
+        },
+      },
+      include: {
+        schools: {
+          include: {
+            plp: true
+          }
         }
+      }
+    });
 
-        return toSchoolResponse(school)
+    return schools;
+  }
+
+  static async storeData(request: SchoolRequest): Promise<SchoolResponse> {
+    const schoolRequest = Validation.validate(
+      SchoolValidation.SchoolRequest,
+      request
+    );
+
+    const [school] = await prisma.$transaction([
+      prisma.school.create({
+        data: {
+          name: schoolRequest.name,
+        },
+      }),
+    ]);
+
+    await prisma.$transaction([
+      prisma.school_plps.create({
+        data: {
+          school_id: school.id,
+          plp_id: schoolRequest.plp_id,
+        },
+      }),
+    ]);
+
+    return toSchoolResponse(school);
+  }
+
+  static async findDataById(schoolId: number): Promise<any> {
+    const school = await prisma.school.findUnique({
+      where: {
+        id: schoolId,
+      },
+      include: {
+        schools: {
+          include: {
+            plp: true,
+          },
+        },
+      },
+    });
+
+    if (!school) {
+      throw new ErrorResponse(404, "school not found");
     }
 
-    static async deleteDataById(schoolId: number){
-        const isSchoolExist = await this.findDataById(schoolId)
+    return school;
+  }
 
-        if(!isSchoolExist){
-            throw new ErrorResponse(404, 'school not found')
+  static async deleteDataById(schoolId: number): Promise<SchoolResponse> {
+    const isSchoolExist = await this.findDataById(schoolId);
+
+    if (!isSchoolExist) {
+      throw new ErrorResponse(404, "school not found");
+    }
+
+    const [school] = await prisma.$transaction([
+      prisma.school.delete({
+        where: {
+          id: schoolId,
+        },
+      }),
+    ]);
+
+    return toSchoolResponse(school);
+  }
+
+  static async updateDataById(
+    request: SchoolRequest,
+    schoolId: number
+  ): Promise<SchoolResponse> {
+    const schoolRequest = Validation.validate(
+      SchoolValidation.SchoolRequest,
+      request
+    );
+
+    const isSchoolExist = await this.findDataById(schoolId);
+
+    if (!isSchoolExist) {
+      throw new ErrorResponse(404, "school not found");
+    }
+
+    const [school] = await prisma.$transaction([
+      prisma.school.update({
+        where: {
+          id: schoolId
+        },
+        data: {
+          name: schoolRequest.name
         }
+      })
+    ])
 
-        const schoolDelete = await prisma.school.delete({
-            where: {
-                id: schoolId
-            }
-        })
-
-        return toSchoolResponse(schoolDelete)
-    }
-
-    static async updateDataById(request: SchoolRequest, schoolId: number){
-        const schoolRequest = Validation.validate(SchoolValidation.SchoolRequest, request)
-
-        const isSchoolExist = await this.findDataById(schoolId)
-
-        if(!isSchoolExist){
-            throw new ErrorResponse(404, 'school not found')
+    await prisma.$transaction([
+      prisma.school_plps.deleteMany({
+        where: {
+          school_id: school.id
         }
+      }),
 
-        const school = await prisma.school.update({
-            where: {
-                id: schoolId
-            },
-            data: {
-                name: schoolRequest.name,
-                plp_id: schoolRequest.plp_id
-            }
-        })
+      prisma.school_plps.create({
+        data: {
+          school_id: school.id,
+          plp_id: schoolRequest.plp_id 
+        }
+      })
+    ])
 
-        return toSchoolResponse(school)
-    }
+    return toSchoolResponse(school);
+  }
 }
