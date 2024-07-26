@@ -69,4 +69,17 @@ export class UserController{
             next(error)
         }
     }
+
+    static async destroyById(req: Request, res: Response, next: NextFunction){
+        try {
+            const userId: number = parseInt(req.params.userId as string)
+            const result = await UserService.destroyById(userId)
+
+            return res.status(200).json({
+                data: result
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
 }

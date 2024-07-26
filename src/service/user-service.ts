@@ -50,18 +50,25 @@ export class UserService {
     return toLoginResponse(user, token);
   }
 
-  static async findDataById(userId: number): Promise<UserResponse> {
+  static async findDataById(userId: number): Promise<any> {
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
       },
+      include: {
+        roles: {
+          include: {
+            role: true
+          }
+        }
+      }
     });
 
     if (!user) {
       throw new ErrorResponse(404, "user not found");
     }
 
-    return toUserResponse(user);
+    return user;
   }
 
   static async updateDataPasswordById(
@@ -144,30 +151,30 @@ export class UserService {
     const user = await prisma.user.findMany({
       take: perPage,
       skip: offset,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
       orderBy: {
         id: "desc",
       },
-      where: {
-        OR: [
-          {
-            name: {
-              contains: searchQuery,
-            },
-          },
-          {
-            email: {
-              contains: searchQuery,
-            },
-          },
-        ],
-      },
+      include: {
+        roles: {
+          include: {
+            role: true
+          }
+        }
+      }
     });
 
     return user;
+  }
+
+  static async destroyById(userId: number): Promise<UserResponse>{
+    const [user] = await prisma.$transaction([
+      prisma.user.delete({
+        where: {
+          id: userId
+        }
+      })
+    ])
+
+    return toUserResponse(user)
   }
 }

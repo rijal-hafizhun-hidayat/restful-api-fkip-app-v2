@@ -14,27 +14,20 @@ export const authMiddleware = async(req: UserInterface, res: Response, next: Nex
 
     const tokenSplit = token.split(' ')
 
-    const decoded = Jwt.verify(tokenSplit[1], 'swefijlzc22@#()33vsd') as JwtPayload
+    try {
+        const decoded = Jwt.verify(tokenSplit[1], 'swefijlzc22@#()33vsd') as JwtPayload
 
-    if(decoded.errors !== undefined){
+        const user = await prisma.user.findUnique({
+            where: {
+                id: decoded.id
+            }
+        })
+
+        req.user = user!
+        next()
+    } catch (error) {
         res.status(401).json({
-            data: decoded.errors
-        }).end()
-    }
-
-    const user = await prisma.user.findUnique({
-        where: {
-            id: decoded.id
-        }
-    })
-
-    if(!user){
-        res.status(401).json({
-            data: 'unauthorized'
-        }).end()
-    }
-    else{
-        req.user = user
-        next();
+            data: error
+        })
     }
 }
