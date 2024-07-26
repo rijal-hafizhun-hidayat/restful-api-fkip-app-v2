@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../service/user-service";
-import { UserResponse } from "../model/user-model";
+import { RegisterRequest, UpdateRequest, UserResponse } from "../model/user-model";
 
 export class UserController{
     static async register(req: Request, res: Response, next: NextFunction){
         try {
-            const result = await UserService.register(req.body)
+            const request: RegisterRequest = req.body
+            const result = await UserService.register(request)
             return res.status(200).json({
                 data: result
             })
@@ -30,7 +31,7 @@ export class UserController{
 
     static async updateById(req: Request, res: Response, next: NextFunction){
         try {
-            const request: UserResponse = req.body
+            const request: UpdateRequest = req.body
             const userId: number = parseInt(req.params.userId as string)
 
             const result: UserResponse = await UserService.updateDataById(request, userId)

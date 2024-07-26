@@ -8,6 +8,13 @@ export type RegisterRequest = {
     password: string
 }
 
+export type UpdateRequest = {
+    name: string,
+    username: string,
+    email: string,
+    role_id: number
+}
+
 export type UserResponse = {
     name: string,
     username: string,

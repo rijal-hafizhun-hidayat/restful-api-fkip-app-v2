@@ -7,10 +7,15 @@ export type SchoolRequest = {
     update_at: Date
 }
 
-export function toSchoolResponse(school: school): SchoolRequest{
+export type SchoolResponse = {
+    name: string,
+    created_at: Date,
+    update_at: Date
+}
+
+export function toSchoolResponse(school: school): SchoolResponse{
     return {
         name: school.name,
-        plp_id: school.plp_id,
         created_at: school.created_at,
         update_at: school.created_at
     }

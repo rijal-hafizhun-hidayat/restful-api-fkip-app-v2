@@ -5,7 +5,8 @@ import { SchoolYearService } from "../service/school-year-service";
 export class SchoolYearController{
     static async getAll(req: Request, res: Response, next: NextFunction){
         try {
-            const result = await SchoolYearService.getAllData()
+            const search: string = req.query.search as string
+            const result = await SchoolYearService.getAllData(search)
 
             return res.status(200).json({
                 data: result
