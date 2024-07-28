@@ -36,6 +36,7 @@ apiRoute.get('/api/users/:userId', UserController.findById)
 apiRoute.put('/api/users/:userId', UserController.updateById)
 apiRoute.delete('/api/users/:userId', UserController.destroyById)
 apiRoute.put('/api/users/:userId/change-password', UserController.updatePasswordById)
+apiRoute.get('/api/users/:roleId/role', UserController.getAllByRoleId)
 
 apiRoute.get('/api/school-year', SchoolYearController.getAll)
 apiRoute.post('/api/school-year', SchoolYearController.store)

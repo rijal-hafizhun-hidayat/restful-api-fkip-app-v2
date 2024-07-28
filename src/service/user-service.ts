@@ -55,13 +55,17 @@ export class UserService {
       where: {
         id: userId,
       },
-      include: {
+      select: {
+        name: true,
+        email: true,
+        created_at: true,
+        updated_at: true,
         roles: {
           include: {
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -143,7 +147,12 @@ export class UserService {
     return toUserResponse(user);
   }
 
-  static async getAllData(page: number, search: string) {
+  static async getAllData(
+    page: number,
+    search: string,
+    role_id: number
+  ): Promise<any> {
+    const roleId: number = role_id;
     const searchQuery: string = search;
     const perPage: number = 5;
     const offset: number = (page - 1) * perPage;
@@ -151,30 +160,53 @@ export class UserService {
     const user = await prisma.user.findMany({
       take: perPage,
       skip: offset,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        created_at: true,
+        updated_at: true,
+        roles: {
+          include: {
+            role: true,
+          },
+        },
+      },
       orderBy: {
         id: "desc",
       },
-      include: {
-        roles: {
-          include: {
-            role: true
-          }
-        }
-      }
     });
 
     return user;
   }
 
-  static async destroyById(userId: number): Promise<UserResponse>{
+  static async getAllByRoleId(roleId: number): Promise<any> {
+    const user = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true
+      },
+      where: {
+        roles: {
+          some: {
+            role_id: roleId,
+          },
+        },
+      },
+    });
+
+    return user;
+  }
+
+  static async destroyById(userId: number): Promise<UserResponse> {
     const [user] = await prisma.$transaction([
       prisma.user.delete({
         where: {
-          id: userId
-        }
-      })
-    ])
+          id: userId,
+        },
+      }),
+    ]);
 
-    return toUserResponse(user)
+    return toUserResponse(user);
   }
 }
