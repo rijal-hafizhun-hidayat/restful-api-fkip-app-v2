@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "relationJoins"]
 }
 
 datasource db {
@@ -24,6 +24,9 @@ model user {
   updated_at DateTime @updatedAt
 
   roles user_roles[]
+  user_dpl accommodates[] @relation("user_dpl")
+  user_tutor_teacher accommodates[] @relation("user_tutor_teacher")
+  user_colleger accommodates[] @relation("user_colleger")
 
   @@map("users")
 }
@@ -114,4 +117,19 @@ model school_plps {
 
   @@id([school_id, plp_id])
   @@map("school_plps")
+}
+
+model accommodates {
+  id Int @id @default(autoincrement())
+  user_id_dpl Int?
+  user_id_tutor_teacher Int?
+  user_id_colleger Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_dpl user? @relation("user_dpl", fields: [user_id_dpl], references: [id])
+  user_tutor_teacher user? @relation("user_tutor_teacher", fields: [user_id_tutor_teacher], references: [id])
+  user_colleger user? @relation("user_colleger", fields: [user_id_colleger], references: [id])
+
+  @@map("accommodates")
 }
