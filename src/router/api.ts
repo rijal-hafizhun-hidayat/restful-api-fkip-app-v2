@@ -11,6 +11,8 @@ const apiRoute = express.Router()
 apiRoute.use(authMiddleware)
 
 apiRoute.get('/api/me', AuthController.currentUser)
+apiRoute.put('/api/me', AuthController.updateProfile)
+apiRoute.put('/api/me/update-password', AuthController.updatePassword)
 apiRoute.get('/api/refreshtoken', AuthController.refreshToken)
 
 apiRoute.get('/api/role', RoleController.getAll)
