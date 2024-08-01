@@ -1,4 +1,4 @@
-import { user } from "@prisma/client";
+import { user, user_plps } from "@prisma/client";
 
 export type LoginRequest = {
   username: string;
@@ -10,8 +10,8 @@ export type TokenRequest = {
 };
 
 export type UpdatePasswordRequest = {
-    password: string
-}
+  password: string;
+};
 
 export type LoginResponse = {
   name: string;
@@ -22,6 +22,10 @@ export type UpdateProfileRequest = {
   name: string;
   username: string;
   email: string;
+};
+
+export type RequestTypePlp = {
+  plp_id: number;
 };
 
 export function toLoginResponse(user: user, token: string): LoginResponse {
@@ -36,5 +40,11 @@ export function toUpdateProfileRequest(user: user): UpdateProfileRequest {
     name: user.name,
     username: user.username,
     email: user.email,
+  };
+}
+
+export function toRespondUserPlps(user_plps: user_plps): RequestTypePlp {
+  return {
+    plp_id: user_plps.plp_id,
   };
 }

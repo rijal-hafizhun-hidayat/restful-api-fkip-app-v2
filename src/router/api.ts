@@ -6,6 +6,7 @@ import { AuthController } from "../controller/auth-controller";
 import { SchoolController } from "../controller/school-controller";
 import { UserController } from "../controller/user-controller";
 import { SchoolYearController } from "../controller/school-year-controller";
+import { AccommodateController } from "../controller/accommodate-controller";
 
 const apiRoute = express.Router()
 apiRoute.use(authMiddleware)
@@ -13,6 +14,8 @@ apiRoute.use(authMiddleware)
 apiRoute.get('/api/me', AuthController.currentUser)
 apiRoute.put('/api/me', AuthController.updateProfile)
 apiRoute.put('/api/me/update-password', AuthController.updatePassword)
+apiRoute.get('/api/me/type-plp', AuthController.getTypePlpByUserId)
+apiRoute.post('/api/me/type-plp', AuthController.storeTypPlp)
 apiRoute.get('/api/refreshtoken', AuthController.refreshToken)
 
 apiRoute.get('/api/role', RoleController.getAll)
@@ -45,6 +48,8 @@ apiRoute.post('/api/school-year', SchoolYearController.store)
 apiRoute.get('/api/school-year/:schoolYearId', SchoolYearController.findById)
 apiRoute.put('/api/school-year/:schoolYearId', SchoolYearController.updateById)
 apiRoute.delete('/api/school-year/:schoolYearId', SchoolYearController.deleteById)
+
+apiRoute.put('/api/accommodate', AccommodateController.store)
 
 export {
     apiRoute

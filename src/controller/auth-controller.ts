@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction, response } from "express";
 import { AuthService } from "../service/auth-service";
 import {
+  RequestTypePlp,
   UpdatePasswordRequest,
   UpdateProfileRequest,
 } from "../model/auth-model";
@@ -61,6 +62,33 @@ export class AuthController {
     try {
       const token: string = req.get("Authorization")!;
       const result = await AuthService.refreshToken(token);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getTypePlpByUserId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const token: string = req.get("Authorization")!;
+      const result = await AuthService.getTypePlpByUserId(token)
+
+      return res.status(200).json({
+        data: result
+      })
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async storeTypPlp(req: Request, res: Response, next: NextFunction) {
+    try {
+      const token: string = req.get("Authorization")!;
+      const request: RequestTypePlp = req.body;
+      const result = await AuthService.storeTypePlp(request, token);
 
       return res.status(200).json({
         data: result,

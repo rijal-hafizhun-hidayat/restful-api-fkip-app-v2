@@ -24,6 +24,7 @@ model user {
   updated_at DateTime @updatedAt
 
   roles user_roles[]
+  plps user_plps[]
   user_dpl accommodates[] @relation("user_dpl")
   user_tutor_teacher accommodates[] @relation("user_tutor_teacher")
   user_colleger accommodates[] @relation("user_colleger")
@@ -51,6 +52,7 @@ model plp {
   
   school_years plp_school_year[]
   schools school_plps[]
+  users user_plps[]
 
   @@map("plps")
 }
@@ -132,4 +134,17 @@ model accommodates {
   user_colleger user? @relation("user_colleger", fields: [user_id_colleger], references: [id])
 
   @@map("accommodates")
+}
+
+model user_plps {
+  id Int @id @default(autoincrement())
+  user_id Int
+  plp_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user user @relation(fields: [user_id], references: [id])
+  plp plp @relation(fields: [plp_id], references: [id])
+
+  @@map("user_plps")
 }
