@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex", "relationJoins"]
 }
 
@@ -15,27 +15,27 @@ datasource db {
 }
 
 model user {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  username  String @unique
-  email String @unique
-  password String @db.VarChar(255)
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  username   String   @unique
+  email      String   @unique
+  password   String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  roles user_roles[]
-  plps user_plps[]
-  user_dpl accommodates[] @relation("user_dpl")
+  roles              user_roles[]
+  plps               user_plps[]
+  user_dpl           accommodates[] @relation("user_dpl")
   user_tutor_teacher accommodates[] @relation("user_tutor_teacher")
-  user_colleger accommodates[] @relation("user_colleger")
+  user_colleger      accommodates[] @relation("user_colleger")
 
   @@map("users")
 }
 
 model role {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  guard Boolean? @db.TinyInt @default(false)
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  guard      Boolean? @default(false) @db.TinyInt
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -45,22 +45,21 @@ model role {
 }
 
 model plp {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  
+
   school_years plp_school_year[]
-  schools school_plps[]
-  users user_plps[]
+  schools      school_plps[]
+  users        user_plps[]
 
   @@map("plps")
 }
 
-
 model school_year {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -70,22 +69,21 @@ model school_year {
 }
 
 model plp_school_year {
-  plp_id Int
+  plp_id         Int
   school_year_id Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 
-  plp plp @relation(fields: [plp_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  plp         plp         @relation(fields: [plp_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   school_year school_year @relation(fields: [school_year_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([plp_id, school_year_id])
-
   @@map("plp_school_years")
 }
 
 model user_roles {
-  user_id Int
-  role_id Int
+  user_id    Int
+  role_id    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -93,13 +91,12 @@ model user_roles {
   user user @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([user_id, role_id])
-
   @@map("user_roles")
 }
 
 model school {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -109,42 +106,42 @@ model school {
 }
 
 model school_plps {
-  school_id Int
-  plp_id Int
+  school_id  Int
+  plp_id     Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   school school @relation(fields: [school_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  plp plp @relation(fields: [plp_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  plp    plp    @relation(fields: [plp_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([school_id, plp_id])
   @@map("school_plps")
 }
 
 model accommodates {
-  id Int @id @default(autoincrement())
-  user_id_dpl Int?
+  id                    Int      @id @default(autoincrement())
+  user_id_dpl           Int?
   user_id_tutor_teacher Int?
-  user_id_colleger Int?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  user_id_colleger      Int?
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
 
-  user_dpl user? @relation("user_dpl", fields: [user_id_dpl], references: [id])
+  user_dpl           user? @relation("user_dpl", fields: [user_id_dpl], references: [id])
   user_tutor_teacher user? @relation("user_tutor_teacher", fields: [user_id_tutor_teacher], references: [id])
-  user_colleger user? @relation("user_colleger", fields: [user_id_colleger], references: [id])
+  user_colleger      user? @relation("user_colleger", fields: [user_id_colleger], references: [id])
 
   @@map("accommodates")
 }
 
 model user_plps {
-  id Int @id @default(autoincrement())
-  user_id Int
-  plp_id Int
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  plp_id     Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   user user @relation(fields: [user_id], references: [id])
-  plp plp @relation(fields: [plp_id], references: [id])
+  plp  plp  @relation(fields: [plp_id], references: [id])
 
   @@map("user_plps")
 }
