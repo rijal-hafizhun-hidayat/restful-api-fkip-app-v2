@@ -19,6 +19,6 @@ export class AuthValidation {
   });
 
   static readonly RequestUserPlpValidation: ZodType = z.object({
-    plp_id: number().min(1).int()
+    plp_id: number().min(1).int(),
   });
 }
