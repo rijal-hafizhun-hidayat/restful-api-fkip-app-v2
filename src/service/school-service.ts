@@ -19,10 +19,10 @@ export class SchoolService {
       include: {
         schools: {
           include: {
-            plp: true
-          }
-        }
-      }
+            plp: true,
+          },
+        },
+      },
     });
 
     return schools;
@@ -111,28 +111,28 @@ export class SchoolService {
     const [school] = await prisma.$transaction([
       prisma.school.update({
         where: {
-          id: schoolId
+          id: schoolId,
         },
         data: {
-          name: schoolRequest.name
-        }
-      })
-    ])
+          name: schoolRequest.name,
+        },
+      }),
+    ]);
 
     await prisma.$transaction([
       prisma.school_plps.deleteMany({
         where: {
-          school_id: school.id
-        }
+          school_id: school.id,
+        },
       }),
 
       prisma.school_plps.create({
         data: {
           school_id: school.id,
-          plp_id: schoolRequest.plp_id 
-        }
-      })
-    ])
+          plp_id: schoolRequest.plp_id,
+        },
+      }),
+    ]);
 
     return toSchoolResponse(school);
   }

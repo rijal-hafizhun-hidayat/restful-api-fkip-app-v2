@@ -4,13 +4,11 @@ import { AuthController } from "../controller/auth-controller";
 import { ConsoleController } from "../controller/console-controller";
 import { RoleController } from "../controller/role-controller";
 
-const publicRoute = express.Router()
+const publicRoute = express.Router();
 
-publicRoute.get('/api', ConsoleController.index)
-publicRoute.post('/api/login', AuthController.login)
-publicRoute.post('/api/register', UserController.register)
-publicRoute.get('/api/role-not-admin', RoleController.getAllNotAdmin)
+publicRoute.get("/api", ConsoleController.index);
+publicRoute.post("/api/login", AuthController.login);
+publicRoute.post("/api/register", UserController.register);
+publicRoute.get("/api/role-not-admin", RoleController.getAllNotAdmin);
 
-export {
-    publicRoute
-}
+export { publicRoute };
