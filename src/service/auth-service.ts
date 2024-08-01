@@ -3,7 +3,9 @@ import { ErrorResponse } from "../error/error-response";
 import {
   LoginRequest,
   LoginResponse,
+  RequestTypePlp,
   toLoginResponse,
+  toRespondUserPlps,
   toUpdateProfileRequest,
   UpdatePasswordRequest,
   UpdateProfileRequest,
@@ -131,15 +133,15 @@ export class AuthService {
     ) as JwtPayload;
 
     const [user] = await prisma.$transaction([
-        prisma.user.update({
-            where: {
-                id: tokenDecoded.id
-            },
-            data: {
-                password: bcrypt.hashSync(requestBody.password, 10),
-            }
-        })
-    ])
+      prisma.user.update({
+        where: {
+          id: tokenDecoded.id,
+        },
+        data: {
+          password: bcrypt.hashSync(requestBody.password, 10),
+        },
+      }),
+    ]);
 
     return toUpdateProfileRequest(user);
   }
@@ -163,5 +165,62 @@ export class AuthService {
     } else {
       const token = tokenSplit[1];
     }
+  }
+
+  static async storeTypePlp(
+    request: RequestTypePlp,
+    token: string
+  ): Promise<RequestTypePlp> {
+    const tokenSplit = token.split(" ");
+
+    const tokenDecoded = Jwt.verify(
+      tokenSplit[1],
+      "swefijlzc22@#()33vsd"
+    ) as JwtPayload;
+    const requestBody = Validation.validate(
+      AuthValidation.RequestTypePlpValidation,
+      request
+    );
+
+    const user = prisma.user.findUnique({
+      where: {
+        id: tokenDecoded.id,
+      },
+    });
+
+    if (!user) {
+      throw new ErrorResponse(404, "user not found");
+    }
+
+    const [user_plps] = await prisma.$transaction([
+      prisma.user_plps.create({
+        data: {
+          user_id: tokenDecoded.id,
+          plp_id: requestBody.plp_id,
+        },
+      }),
+    ]);
+
+    return toRespondUserPlps(user_plps)
+  }
+
+  static async getTypePlpByUserId(token: string): Promise<any> {
+    const tokenSplit = token.split(" ");
+
+    const tokenDecoded = Jwt.verify(
+      tokenSplit[1],
+      "swefijlzc22@#()33vsd"
+    ) as JwtPayload;
+
+    const userPlps = await prisma.user_plps.findMany({
+      include: {
+        plp: true
+      },
+      where: {
+        user_id: tokenDecoded.id
+      }
+    })
+
+    return userPlps
   }
 }
