@@ -3,7 +3,7 @@ import { ErrorResponse } from "../error/error-response";
 import {
   LoginRequest,
   LoginResponse,
-  RequestTypePlp,
+  RequestUserPlp,
   toLoginResponse,
   toRespondUserPlps,
   toUpdateProfileRequest,
@@ -167,10 +167,10 @@ export class AuthService {
     }
   }
 
-  static async storeTypePlp(
-    request: RequestTypePlp,
+  static async storeUserPlp(
+    request: RequestUserPlp,
     token: string
-  ): Promise<RequestTypePlp> {
+  ): Promise<RequestUserPlp> {
     const tokenSplit = token.split(" ");
 
     const tokenDecoded = Jwt.verify(
@@ -178,7 +178,7 @@ export class AuthService {
       "swefijlzc22@#()33vsd"
     ) as JwtPayload;
     const requestBody = Validation.validate(
-      AuthValidation.RequestTypePlpValidation,
+      AuthValidation.RequestUserPlpValidation,
       request
     );
 
@@ -201,10 +201,10 @@ export class AuthService {
       }),
     ]);
 
-    return toRespondUserPlps(user_plps)
+    return toRespondUserPlps(user_plps);
   }
 
-  static async getTypePlpByUserId(token: string): Promise<any> {
+  static async getUserPlpByUserId(token: string): Promise<any> {
     const tokenSplit = token.split(" ");
 
     const tokenDecoded = Jwt.verify(
@@ -214,13 +214,61 @@ export class AuthService {
 
     const userPlps = await prisma.user_plps.findMany({
       include: {
-        plp: true
+        plp: true,
       },
       where: {
-        user_id: tokenDecoded.id
-      }
-    })
+        user_id: tokenDecoded.id,
+      },
+    });
 
-    return userPlps
+    return userPlps;
+  }
+
+  static async destroyUserPlpById(userPlpId: number): Promise<RequestUserPlp> {
+    const [userPlps] = await prisma.$transaction([
+      prisma.user_plps.delete({
+        where: {
+          id: userPlpId,
+        },
+      }),
+    ]);
+
+    return toRespondUserPlps(userPlps);
+  }
+
+  static async getUserPlpById(userPlpId: number): Promise<any> {
+    const userPlp = await prisma.user_plps.findUnique({
+      where: {
+        id: userPlpId,
+      },
+      include: {
+        plp: true,
+      },
+    });
+
+    return userPlp;
+  }
+
+  static async updateUserPlpById(
+    userPlpId: number,
+    request: RequestUserPlp
+  ): Promise<RequestUserPlp> {
+    const requestBody = Validation.validate(
+      AuthValidation.RequestUserPlpValidation,
+      request
+    );
+
+    const [user_plp] = await prisma.$transaction([
+      prisma.user_plps.update({
+        where: {
+          id: userPlpId,
+        },
+        data: {
+          plp_id: requestBody.plp_id,
+        },
+      }),
+    ]);
+
+    return toRespondUserPlps(user_plp);
   }
 }
