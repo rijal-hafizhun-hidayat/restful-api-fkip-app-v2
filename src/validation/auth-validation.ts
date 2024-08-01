@@ -18,7 +18,7 @@ export class AuthValidation {
     password: string().min(1).max(100),
   });
 
-  static readonly RequestTypePlpValidation: ZodType = z.object({
+  static readonly RequestUserPlpValidation: ZodType = z.object({
     plp_id: number().min(1).int()
   });
 }

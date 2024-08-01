@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction, response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { AuthService } from "../service/auth-service";
 import {
-  RequestTypePlp,
+  RequestUserPlp,
   UpdatePasswordRequest,
   UpdateProfileRequest,
 } from "../model/auth-model";
@@ -71,24 +71,76 @@ export class AuthController {
     }
   }
 
-  static async getTypePlpByUserId(req: Request, res: Response, next: NextFunction) {
+  static async getUserPlpByUserId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const token: string = req.get("Authorization")!;
-      const result = await AuthService.getTypePlpByUserId(token)
+      const result = await AuthService.getUserPlpByUserId(token);
 
       return res.status(200).json({
-        data: result
-      })
+        data: result,
+      });
     } catch (error) {
       next(error);
     }
   }
 
-  static async storeTypPlp(req: Request, res: Response, next: NextFunction) {
+  static async storeUserPlp(req: Request, res: Response, next: NextFunction) {
     try {
       const token: string = req.get("Authorization")!;
-      const request: RequestTypePlp = req.body;
-      const result = await AuthService.storeTypePlp(request, token);
+      const request: RequestUserPlp = req.body;
+      const result = await AuthService.storeUserPlp(request, token);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async destroyUserPlpById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const userPlpId: number = parseInt(req.params.userPlpId);
+      const result = await AuthService.destroyUserPlpById(userPlpId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getUserPlpById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userPlpId: number = parseInt(req.params.userPlpId);
+      const result = await AuthService.getUserPlpById(userPlpId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateUserPlpById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const userPlpId: number = parseInt(req.params.userPlpId);
+      const request: RequestUserPlp = req.body;
+      const result = await AuthService.updateUserPlpById(userPlpId, request);
 
       return res.status(200).json({
         data: result,
