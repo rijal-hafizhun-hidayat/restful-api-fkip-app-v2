@@ -24,7 +24,7 @@ export type UpdateProfileRequest = {
   email: string;
 };
 
-export type RequestTypePlp = {
+export type RequestUserPlp = {
   plp_id: number;
 };
 
@@ -43,7 +43,7 @@ export function toUpdateProfileRequest(user: user): UpdateProfileRequest {
   };
 }
 
-export function toRespondUserPlps(user_plps: user_plps): RequestTypePlp {
+export function toRespondUserPlps(user_plps: user_plps): RequestUserPlp {
   return {
     plp_id: user_plps.plp_id,
   };
