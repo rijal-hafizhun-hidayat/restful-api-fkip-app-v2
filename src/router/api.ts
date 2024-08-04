@@ -61,6 +61,21 @@ apiRoute.delete(
   SchoolYearController.deleteById
 );
 
-apiRoute.put("/api/accommodate", AccommodateController.store);
+apiRoute.get(
+  "/api/accommodate/tutor-teacher",
+  AccommodateController.getTutorTeacherByUserId
+);
+apiRoute.get(
+  "/api/accommodate/tutor-teacher/:accommodateId",
+  AccommodateController.getTutorTeacherByAccommodateId
+);
+apiRoute.put(
+  "/api/accommodate/tutor-teacher/:accommodateId",
+  AccommodateController.updateTutorTeacherByAccommodateId
+);
+apiRoute.post(
+  "/api/accommodate/tutor-teacher",
+  AccommodateController.storeTutorTeacher
+);
 
 export { apiRoute };
