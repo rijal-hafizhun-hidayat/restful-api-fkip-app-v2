@@ -92,4 +92,21 @@ apiRoute.get(
   "/api/accommodate/colleger/:accommodateId",
   AccommodateController.getCollegerByAccommodateId
 );
+
+apiRoute.get(
+  "/api/accommodate/dpl",
+  AccommodateController.getAccommodateDplByUserId
+);
+apiRoute.post(
+  "/api/accommodate/dpl",
+  AccommodateController.storeAccommodateDpl
+);
+apiRoute.get(
+  "/api/accommodate/dpl/:accommodateId",
+  AccommodateController.getAccommodateDplByAccommodateId
+);
+apiRoute.put(
+  "/api/accommodate/dpl/:accommodateId",
+  AccommodateController.updateAccommodateDplByAccommodateId
+);
 export { apiRoute };
