@@ -63,9 +63,80 @@ export class AccommodateController {
   ) {
     try {
       const accommodateId: number = parseInt(req.params.accommodateId);
-      const request: AccommodateRequest = req.body
-      const result = await AccommodateService.updateTutorTeacherByAccommodateId(request, accommodateId)
-      
+      const request: AccommodateRequest = req.body;
+      const result = await AccommodateService.updateTutorTeacherByAccommodateId(
+        request,
+        accommodateId
+      );
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getCollegerByUserId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const userId: number = parseInt(req.query.user_id as string);
+      const result = await AccommodateService.getCollegerByUserId(userId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async storeColleger(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request: AccommodateRequest = req.body;
+      const result = await AccommodateService.storeColleger(request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getCollegerByAccommodateId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const accommodateId: number = parseInt(req.params.accommodateId);
+      const result = await AccommodateService.getCollegerByAccommodateId(
+        accommodateId
+      );
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async destroyAccommodateByAccommodateId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const accommodateId: number = parseInt(req.params.accommodateId);
+      const result = await AccommodateService.destroyAccommodateByAccommodateId(
+        accommodateId
+      );
+
       return res.status(200).json({
         data: result,
       });
