@@ -144,4 +144,79 @@ export class AccommodateController {
       next(error);
     }
   }
+
+  static async getAccommodateDplByUserId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const userId: number = parseInt(req.query.user_id as string);
+      const result = await AccommodateService.getAccommodateDplByUserId(userId);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async storeAccommodateDpl(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const request: AccommodateRequest = req.body;
+      const result = await AccommodateService.storeAccommodateDpl(request);
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAccommodateDplByAccommodateId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const accommodateId: number = parseInt(req.params.accommodateId);
+      const result = await AccommodateService.getAccommodateDplByAccommodateId(
+        accommodateId
+      );
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateAccommodateDplByAccommodateId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const accommodateId: number = parseInt(req.params.accommodateId);
+      const request: AccommodateRequest = req.body;
+
+      const result =
+        await AccommodateService.updateAccommodateDplByAccommodateId(
+          accommodateId,
+          request
+        );
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
