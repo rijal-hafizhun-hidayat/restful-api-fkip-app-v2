@@ -92,6 +92,10 @@ apiRoute.get(
   "/api/accommodate/colleger/:accommodateId",
   AccommodateController.getCollegerByAccommodateId
 );
+apiRoute.put(
+  "/api/accommodate/colleger/:accommodateId",
+  AccommodateController.updateAccommodateCollegerByAccommodateId
+);
 
 apiRoute.get(
   "/api/accommodate/dpl",
