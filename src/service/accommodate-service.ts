@@ -516,4 +516,27 @@ export class AccommodateService {
 
     return toAccommodateResponse(accommodate);
   }
+
+  static async updateAccommodateCollegerByAccommodateId(
+    accommodateId: number,
+    request: AccommodateRequest
+  ): Promise<AccommodateResponse> {
+    const requestBody: AccommodateRequest = Validation.validate(
+      AccommodateValidation.accommodateUpdateValidation,
+      request
+    );
+
+    const [accommodate] = await prisma.$transaction([
+      prisma.accommodates.update({
+        where: {
+          id: accommodateId,
+        },
+        data: {
+          user_id_colleger: requestBody.user_id_accommodate,
+        },
+      }),
+    ]);
+
+    return toAccommodateResponse(accommodate);
+  }
 }

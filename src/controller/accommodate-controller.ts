@@ -219,4 +219,27 @@ export class AccommodateController {
       next(error);
     }
   }
+
+  static async updateAccommodateCollegerByAccommodateId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const accommodateId: number = parseInt(req.params.accommodateId);
+      const request: AccommodateRequest = req.body;
+
+      const result =
+        await AccommodateService.updateAccommodateCollegerByAccommodateId(
+          accommodateId,
+          request
+        );
+
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
