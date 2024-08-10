@@ -7,6 +7,7 @@ import { SchoolController } from "../controller/school-controller";
 import { UserController } from "../controller/user-controller";
 import { SchoolYearController } from "../controller/school-year-controller";
 import { AccommodateController } from "../controller/accommodate-controller";
+import { ProdiController } from "../controller/prodi-controller";
 
 const apiRoute = express.Router();
 apiRoute.use(authMiddleware);
@@ -113,4 +114,10 @@ apiRoute.put(
   "/api/accommodate/dpl/:accommodateId",
   AccommodateController.updateAccommodateDplByAccommodateId
 );
+
+apiRoute.get("/api/prodi", ProdiController.getAll);
+apiRoute.post("/api/prodi", ProdiController.store);
+apiRoute.get("/api/prodi/:prodiId", ProdiController.findByProdiId);
+apiRoute.put("/api/prodi/:prodiId", ProdiController.updateByProdiId);
+apiRoute.delete("/api/prodi/:prodiId", ProdiController.destroyByProdiId);
 export { apiRoute };
