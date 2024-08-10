@@ -2,6 +2,7 @@ import { prisma } from "../app/database";
 import {
   PasswordRequest,
   RegisterRequest,
+  SearchUsers,
   toUserResponse,
   UpdateRequest,
   UserResponse,
@@ -147,13 +148,7 @@ export class UserService {
     return toUserResponse(user);
   }
 
-  static async getAllData(
-    page: number,
-    search: string,
-    role_id: number
-  ): Promise<any> {
-    const roleId: number = role_id;
-    const searchQuery: string = search;
+  static async getAllData(page: number): Promise<any> {
     const perPage: number = 5;
     const offset: number = (page - 1) * perPage;
 
@@ -208,5 +203,60 @@ export class UserService {
     ]);
 
     return toUserResponse(user);
+  }
+
+  static async search(queryParams: SearchUsers): Promise<any> {
+    const page: number = queryParams.page ? parseInt(queryParams.page) : 1;
+    const perPage: number = 5;
+    const offset: number = (page - 1) * perPage;
+
+    const query: any = [];
+
+    if (queryParams.q) {
+      query.push({
+        OR: [
+          {
+            name: {
+              contains: queryParams.q,
+            },
+          },
+          {
+            email: {
+              contains: queryParams.q,
+            },
+          },
+        ],
+      });
+    }
+
+    const users = await prisma.user.findMany({
+      where: {
+        roles: {
+          some: {
+            role_id: queryParams.role_id ? parseInt(queryParams.role_id) : undefined,
+          },
+        },
+        AND: query,
+      },
+      take: perPage,
+      skip: offset,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        created_at: true,
+        updated_at: true,
+        roles: {
+          include: {
+            role: true,
+          },
+        },
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    return users;
   }
 }

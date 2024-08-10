@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ProdiRequest } from "../model/prodi-model";
+import { ProdiQueryParamsRequest, ProdiRequest } from "../model/prodi-model";
 import { ProdiService } from "../service/prodi-service";
 
 export class ProdiController {
@@ -7,6 +7,19 @@ export class ProdiController {
     try {
       const result = await ProdiService.getAll();
 
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const queryParams: ProdiQueryParamsRequest = req.query;
+      const result = await ProdiService.search(queryParams);
+      
       return res.status(200).json({
         data: result,
       });

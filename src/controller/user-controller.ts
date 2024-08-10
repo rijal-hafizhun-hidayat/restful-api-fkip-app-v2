@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { UserService } from "../service/user-service";
 import {
   RegisterRequest,
+  SearchUsers,
   UpdateRequest,
   UserResponse,
 } from "../model/user-model";
@@ -21,11 +22,22 @@ export class UserController {
 
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const role_id: number = parseInt(req.query.role_id as string);
       const page: number = parseInt(req.query.page as string);
-      const search: string = req.query.search as string;
 
-      const result = await UserService.getAllData(page, search, role_id);
+      const result = await UserService.getAllData(page);
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const queryParams: SearchUsers = req.query;
+      const result = await UserService.search(queryParams);
+
       return res.status(200).json({
         data: result,
       });
