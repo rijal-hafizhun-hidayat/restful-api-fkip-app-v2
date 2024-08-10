@@ -44,6 +44,7 @@ apiRoute.delete("/api/school/:schoolId", SchoolController.destroyById);
 apiRoute.put("/api/school/:schoolId", SchoolController.updateById);
 
 apiRoute.get("/api/users", UserController.getAll);
+apiRoute.get("/api/users/search", UserController.search);
 apiRoute.get("/api/users/:userId", UserController.findById);
 apiRoute.put("/api/users/:userId", UserController.updateById);
 apiRoute.delete("/api/users/:userId", UserController.destroyById);
@@ -117,6 +118,7 @@ apiRoute.put(
 
 apiRoute.get("/api/prodi", ProdiController.getAll);
 apiRoute.post("/api/prodi", ProdiController.store);
+apiRoute.get("/api/prodi/search", ProdiController.search);
 apiRoute.get("/api/prodi/:prodiId", ProdiController.findByProdiId);
 apiRoute.put("/api/prodi/:prodiId", ProdiController.updateByProdiId);
 apiRoute.delete("/api/prodi/:prodiId", ProdiController.destroyByProdiId);

@@ -8,6 +8,12 @@ export type RegisterRequest = {
   password: string;
 };
 
+export type SearchUsers = {
+  page?: string,
+  q?: string,
+  role_id?: string
+}
+
 export type UpdateRequest = {
   name: string;
   username: string;
