@@ -1,6 +1,7 @@
 import { prisma } from "../app/database";
 import { ErrorResponse } from "../error/error-response";
 import {
+  ProdiQueryParamsRequest,
   ProdiRequest,
   ProdiResponse,
   toProdiResponse,
@@ -11,6 +12,26 @@ import { Validation } from "../validation/validation";
 export class ProdiService {
   static async getAll(): Promise<any> {
     const prodi = await prisma.prodi.findMany();
+
+    return prodi;
+  }
+
+  static async search(queryParams: ProdiQueryParamsRequest): Promise<any> {
+    const query: any = [];
+
+    if (queryParams.q) {
+      query.push({
+        name: {
+          contains: queryParams.q,
+        },
+      });
+    }
+
+    const prodi = await prisma.prodi.findMany({
+      where: {
+        AND: query,
+      },
+    });
 
     return prodi;
   }

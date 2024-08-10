@@ -4,6 +4,10 @@ export type ProdiRequest = {
   name: string;
 };
 
+export type ProdiQueryParamsRequest = {
+  q?: string
+}
+
 export type ProdiResponse = {
   name: string;
   created_at: Date;
