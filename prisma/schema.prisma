@@ -145,3 +145,12 @@ model user_plps {
 
   @@map("user_plps")
 }
+
+model prodi {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("prodis")
+}
