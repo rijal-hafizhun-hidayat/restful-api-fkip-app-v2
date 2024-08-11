@@ -17,19 +17,11 @@ export class ProdiService {
   }
 
   static async search(queryParams: ProdiQueryParamsRequest): Promise<any> {
-    const query: any = [];
-
-    if (queryParams.q) {
-      query.push({
+    const prodi = await prisma.prodi.findMany({
+      where: {
         name: {
           contains: queryParams.q,
         },
-      });
-    }
-
-    const prodi = await prisma.prodi.findMany({
-      where: {
-        AND: query,
       },
     });
 

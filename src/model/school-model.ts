@@ -13,6 +13,10 @@ export type SchoolResponse = {
   update_at: Date;
 };
 
+export type SchoolQueryParams = {
+  q?: string
+}
+
 export function toSchoolResponse(school: school): SchoolResponse {
   return {
     name: school.name,

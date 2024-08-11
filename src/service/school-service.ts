@@ -1,6 +1,7 @@
 import { prisma } from "../app/database";
 import { ErrorResponse } from "../error/error-response";
 import {
+  SchoolQueryParams,
   SchoolRequest,
   SchoolResponse,
   toSchoolResponse,
@@ -135,5 +136,24 @@ export class SchoolService {
     ]);
 
     return toSchoolResponse(school);
+  }
+
+  static async search(queryParams: SchoolQueryParams): Promise<any> {
+    const school = await prisma.school.findMany({
+      where: {
+        name: {
+          contains: queryParams.q,
+        },
+      },
+      include: {
+        schools: {
+          include: {
+            plp: true,
+          },
+        },
+      },
+    });
+
+    return school;
   }
 }
