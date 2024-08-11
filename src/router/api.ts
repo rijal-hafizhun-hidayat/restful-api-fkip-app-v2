@@ -39,6 +39,7 @@ apiRoute.put("/api/plp/:plpId", PlpController.updateById);
 
 apiRoute.get("/api/school", SchoolController.getAll);
 apiRoute.post("/api/school", SchoolController.store);
+apiRoute.get("/api/school/search", SchoolController.search);
 apiRoute.get("/api/school/:schoolId", SchoolController.findById);
 apiRoute.delete("/api/school/:schoolId", SchoolController.destroyById);
 apiRoute.put("/api/school/:schoolId", SchoolController.updateById);
