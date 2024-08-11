@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { SchoolRequest } from "../model/school-model";
+import { SchoolQueryParams, SchoolRequest } from "../model/school-model";
 import { SchoolService } from "../service/school-service";
 
 export class SchoolController {
@@ -61,6 +61,19 @@ export class SchoolController {
     try {
       const schoolId: number = parseInt(req.params.schoolId);
       const result = await SchoolService.deleteDataById(schoolId);
+      return res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const queryParams: SchoolQueryParams = req.query;
+      const result = await SchoolService.search(queryParams);
+
       return res.status(200).json({
         data: result,
       });
