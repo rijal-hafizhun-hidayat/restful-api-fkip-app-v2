@@ -15,7 +15,7 @@ import { ErrorResponse } from "../error/error-response";
 import { LoginResponse, toLoginResponse } from "../model/auth-model";
 
 export class UserService {
-  static async register(request: RegisterRequest): Promise<any> {
+  static async register(request: RegisterRequest): Promise<LoginResponse> {
     const registerRequest = Validation.validate(
       UserValidation.registerRequest,
       request
@@ -73,11 +73,17 @@ export class UserService {
         email: true,
         created_at: true,
         updated_at: true,
+        username: true,
         roles: {
           include: {
             role: true,
           },
         },
+        prodis: {
+          include: {
+            prodi: true
+          }
+        }
       },
     });
 
@@ -118,11 +124,12 @@ export class UserService {
   static async updateDataById(
     request: UpdateRequest,
     userId: number
-  ): Promise<UserResponse> {
+  ): Promise<any> {
     const userRequest = Validation.validate(
       UserValidation.updateRequest,
       request
     );
+    
     const isUserExist = await this.findDataById(userId);
 
     if (!isUserExist) {
@@ -156,6 +163,23 @@ export class UserService {
         },
       }),
     ]);
+
+    if(userRequest.prodi_id !== undefined){
+      await prisma.$transaction([
+        prisma.user_prodis.deleteMany({
+          where: {
+            user_id: user.id
+          }
+        }),
+
+        prisma.user_prodis.create({
+          data: {
+            user_id: user.id,
+            prodi_id: userRequest.prodi_id
+          }
+        })
+      ])
+    }
 
     return toUserResponse(user);
   }
