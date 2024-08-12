@@ -23,6 +23,7 @@ model user {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  prodis             user_prodis[]
   roles              user_roles[]
   plps               user_plps[]
   user_dpl           accommodates[] @relation("user_dpl")
@@ -94,6 +95,19 @@ model user_roles {
   @@map("user_roles")
 }
 
+model user_prodis {
+  user_id    Int
+  prodi_id   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  prodi prodi @relation(fields: [prodi_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user  user  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([user_id, prodi_id])
+  @@map("user_prodis")
+}
+
 model school {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(255)
@@ -126,9 +140,9 @@ model accommodates {
   created_at            DateTime @default(now())
   updated_at            DateTime @updatedAt
 
-  user_dpl           user? @relation("user_dpl", fields: [user_id_dpl], references: [id])
-  user_tutor_teacher user? @relation("user_tutor_teacher", fields: [user_id_tutor_teacher], references: [id])
-  user_colleger      user? @relation("user_colleger", fields: [user_id_colleger], references: [id])
+  user_dpl           user? @relation("user_dpl", fields: [user_id_dpl], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_tutor_teacher user? @relation("user_tutor_teacher", fields: [user_id_tutor_teacher], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_colleger      user? @relation("user_colleger", fields: [user_id_colleger], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("accommodates")
 }
@@ -151,6 +165,8 @@ model prodi {
   name       String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  prodi user_prodis[]
 
   @@map("prodis")
 }
