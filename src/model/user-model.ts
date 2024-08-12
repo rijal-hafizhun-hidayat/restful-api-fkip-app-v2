@@ -4,6 +4,7 @@ export type RegisterRequest = {
   name: string;
   username: string;
   role_id: number;
+  prodi_id?: number
   email: string;
   password: string;
 };

@@ -5,6 +5,7 @@ export class UserValidation {
     name: string().min(1).max(100),
     username: string().min(1).max(100),
     role_id: number().min(1),
+    prodi_id: number().optional(),
     email: string().min(1).max(100),
     password: string().min(1).max(100),
   });
@@ -17,6 +18,7 @@ export class UserValidation {
     name: string().min(1).max(100),
     username: string().min(1).max(100),
     role_id: number().min(1),
+    prodi_id: number().optional(),
     email: string().min(1).max(100),
   });
 }
