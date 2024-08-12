@@ -15,11 +15,12 @@ import { ErrorResponse } from "../error/error-response";
 import { LoginResponse, toLoginResponse } from "../model/auth-model";
 
 export class UserService {
-  static async register(request: RegisterRequest): Promise<LoginResponse> {
+  static async register(request: RegisterRequest): Promise<any> {
     const registerRequest = Validation.validate(
       UserValidation.registerRequest,
       request
     );
+
     const [user] = await prisma.$transaction([
       prisma.user.create({
         data: {
@@ -39,6 +40,17 @@ export class UserService {
         },
       }),
     ]);
+
+    if (registerRequest.prodi_id !== undefined) {
+      await prisma.$transaction([
+        prisma.user_prodis.create({
+          data: {
+            user_id: user.id,
+            prodi_id: registerRequest.prodi_id,
+          },
+        }),
+      ]);
+    }
 
     const token = Jwt.sign(
       {
@@ -233,7 +245,9 @@ export class UserService {
       where: {
         roles: {
           some: {
-            role_id: queryParams.role_id ? parseInt(queryParams.role_id) : undefined,
+            role_id: queryParams.role_id
+              ? parseInt(queryParams.role_id)
+              : undefined,
           },
         },
         AND: query,
