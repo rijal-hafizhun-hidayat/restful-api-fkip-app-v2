@@ -10,5 +10,6 @@ publicRoute.get("/api", ConsoleController.index);
 publicRoute.post("/api/login", AuthController.login);
 publicRoute.post("/api/register", UserController.register);
 publicRoute.get("/api/role-not-admin", RoleController.getAllNotAdmin);
+publicRoute.get("/api/refreshtoken", AuthController.refreshToken);
 
 export { publicRoute };
