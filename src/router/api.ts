@@ -8,6 +8,7 @@ import { UserController } from "../controller/user-controller";
 import { SchoolYearController } from "../controller/school-year-controller";
 import { AccommodateController } from "../controller/accommodate-controller";
 import { ProdiController } from "../controller/prodi-controller";
+import { GuidanceController } from "../controller/guidance-controller";
 
 const apiRoute = express.Router();
 apiRoute.use(authMiddleware);
@@ -23,7 +24,6 @@ apiRoute.delete(
   AuthController.destroyUserPlpById
 );
 apiRoute.put("/api/me/user-plp/:userPlpId", AuthController.updateUserPlpById);
-apiRoute.get("/api/refreshtoken", AuthController.refreshToken);
 
 apiRoute.get("/api/role", RoleController.getAll);
 apiRoute.post("/api/role", RoleController.store);
@@ -123,4 +123,7 @@ apiRoute.get("/api/prodi/search", ProdiController.search);
 apiRoute.get("/api/prodi/:prodiId", ProdiController.findByProdiId);
 apiRoute.put("/api/prodi/:prodiId", ProdiController.updateByProdiId);
 apiRoute.delete("/api/prodi/:prodiId", ProdiController.destroyByProdiId);
+
+apiRoute.post("/api/guidance", GuidanceController.store);
+
 export { apiRoute };
