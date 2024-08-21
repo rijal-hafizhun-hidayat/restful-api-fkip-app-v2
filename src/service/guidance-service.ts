@@ -9,7 +9,56 @@ import { GuidanceValidation } from "../validation/guidance-validation";
 import { Validation } from "../validation/validation";
 
 export class GuidanceService {
-  static async store(request: GuidanceRequest): Promise<any> {
+  static async getByUserId(userId: number): Promise<any> {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        roles: {
+          include: {
+            role: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (user?.roles[0].role.name === null) {
+      throw new ErrorResponse(404, "role user not defined");
+    }
+
+    if (user?.roles[0].role.name === "mahasiswa") {
+      const guidances = await prisma.user_guidance.findMany({
+        where: {
+          user_id_colleger: userId,
+        },
+        include: {
+          guidance: true,
+        },
+      });
+
+      return guidances;
+    } else if (user?.roles[0].role.name === "dpl") {
+      const guidances = await prisma.user_guidance.findMany({
+        where: {
+          user_id_dpl: userId,
+        },
+        include: {
+          guidance: true,
+        },
+      });
+
+      return guidances;
+    } else {
+      throw new ErrorResponse(404, "user guidance not found");
+    }
+  }
+
+  static async store(request: GuidanceRequest): Promise<GuidanceResponse> {
     const requestBody: GuidanceRequest = Validation.validate(
       GuidanceValidation.GuidanceRequest,
       request
