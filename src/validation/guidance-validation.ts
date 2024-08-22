@@ -6,6 +6,8 @@ export class GuidanceValidation {
     guidance_statement: string().min(1).max(255),
     guidance_stage: string().min(1).max(255),
     guidance_note: string().optional(),
-    link: string().min(1).max(255),
+    link: string().refine((value) => /^(https?):\/\/(?=.*\.[a-z]{2,})[^\s$.?#].[^\s]*$/i.test(value), {
+      message: 'Please enter a valid URL',
+    }),
   });
 }

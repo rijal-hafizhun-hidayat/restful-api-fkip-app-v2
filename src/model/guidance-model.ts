@@ -9,19 +9,23 @@ export type GuidanceRequest = {
 };
 
 export type GuidanceResponse = {
-  id: number,
+  id: number;
   guidance_statement: string;
   guidance_stage: string;
   guidance_note?: string;
   link: string;
+  created_at: Date;
+  updated_at: Date;
 };
 
-export function toGuidanceResponse(guidance: guidance): GuidanceResponse{
+export function toGuidanceResponse(guidance: guidance): GuidanceResponse {
   return {
     id: guidance.id,
     guidance_statement: guidance.guidance_statement,
     guidance_stage: guidance.guidance_stage,
     guidance_note: guidance.guidance_note ?? undefined,
-    link: guidance.link
-  }
+    link: guidance.link,
+    created_at: guidance.created_at,
+    updated_at: guidance.updated_at,
+  };
 }

@@ -126,5 +126,8 @@ apiRoute.delete("/api/prodi/:prodiId", ProdiController.destroyByProdiId);
 
 apiRoute.get("/api/guidance", GuidanceController.getByUserId);
 apiRoute.post("/api/guidance", GuidanceController.store);
+apiRoute.get("/api/guidance/:id", GuidanceController.findByGuidanceId);
+apiRoute.delete("/api/guidance/:id", GuidanceController.destroyByGuidanceId);
+apiRoute.put("/api/guidance/:id", GuidanceController.updateByGuidanceId);
 
 export { apiRoute };

@@ -125,4 +125,58 @@ export class GuidanceService {
 
     return toGuidanceResponse(guidance);
   }
+
+  static async destroyByGuidanceId(
+    guidanceId: number
+  ): Promise<GuidanceResponse> {
+    const [guidance] = await prisma.$transaction([
+      prisma.guidance.delete({
+        where: {
+          id: guidanceId,
+        },
+      }),
+    ]);
+
+    return toGuidanceResponse(guidance);
+  }
+
+  static async findByGuidanceId(guidanceId: number): Promise<GuidanceResponse> {
+    const guidance = await prisma.guidance.findUnique({
+      where: {
+        id: guidanceId,
+      },
+    });
+
+    if (!guidance) {
+      throw new ErrorResponse(404, "guidance not found");
+    }
+
+    return toGuidanceResponse(guidance);
+  }
+
+  static async updateByGuidanceId(
+    guidanceId: number,
+    request: GuidanceRequest
+  ): Promise<GuidanceResponse> {
+    const requestBody: GuidanceRequest = Validation.validate(
+      GuidanceValidation.GuidanceRequest,
+      request
+    );
+
+    const [guidance] = await prisma.$transaction([
+      prisma.guidance.update({
+        where: {
+          id: guidanceId,
+        },
+        data: {
+          guidance_statement: requestBody.guidance_statement,
+          guidance_stage: requestBody.guidance_stage,
+          guidance_note: requestBody.guidance_note,
+          link: requestBody.link,
+        },
+      }),
+    ]);
+
+    return toGuidanceResponse(guidance);
+  }
 }
