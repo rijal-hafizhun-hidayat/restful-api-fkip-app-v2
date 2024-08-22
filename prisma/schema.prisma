@@ -182,6 +182,7 @@ model guidance {
   created_at         DateTime        @default(now())
   updated_at         DateTime        @updatedAt
   user_guidance      user_guidance[] @relation("guidance")
+  status             String?         @db.VarChar(255)
 
   @@map("guidances")
 }
@@ -194,7 +195,7 @@ model user_guidance {
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 
-  guidance               guidance @relation("guidance", fields: [guidance_id], references: [id])
+  guidance               guidance @relation("guidance", fields: [guidance_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_colleger_guidance user     @relation("user_colleger_guidance", fields: [user_id_colleger], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_dpl_guidance      user     @relation("user_dpl_guidance", fields: [user_id_dpl], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
