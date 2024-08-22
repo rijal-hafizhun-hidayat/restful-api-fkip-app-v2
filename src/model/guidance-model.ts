@@ -13,6 +13,7 @@ export type GuidanceResponse = {
   guidance_statement: string;
   guidance_stage: string;
   guidance_note?: string;
+  status?: string;
   link: string;
   created_at: Date;
   updated_at: Date;
@@ -27,5 +28,6 @@ export function toGuidanceResponse(guidance: guidance): GuidanceResponse {
     link: guidance.link,
     created_at: guidance.created_at,
     updated_at: guidance.updated_at,
+    status: guidance.status ?? undefined
   };
 }
