@@ -174,17 +174,23 @@ model prodi {
 }
 
 model guidance {
-  id                 Int             @id @default(autoincrement())
-  guidance_statement String          @db.VarChar(255)
-  guidance_stage     String          @db.VarChar(255)
-  guidance_note      String?         @db.VarChar(255)
-  link               String          @db.VarChar(255)
-  created_at         DateTime        @default(now())
-  updated_at         DateTime        @updatedAt
-  user_guidance      user_guidance[] @relation("guidance")
-  status             String?         @db.VarChar(255)
+  id                 Int              @id @default(autoincrement())
+  guidance_statement String           @db.VarChar(255)
+  guidance_stage     String           @db.VarChar(255)
+  guidance_note      String?          @db.VarChar(255)
+  link               String           @db.VarChar(255)
+  created_at         DateTime         @default(now())
+  updated_at         DateTime         @updatedAt
+  user_guidance      user_guidance[]  @relation("guidance")
+  status             status_guidance? @default(MENUNGGU)
 
   @@map("guidances")
+}
+
+enum status_guidance {
+  ACC
+  REVISI
+  MENUNGGU
 }
 
 model user_guidance {
